@@ -15,6 +15,9 @@ RUN cargo build --release --bin electrs
 
 FROM debian:buster-slim
 
+RUN adduser --home /data electrs
+USER electrs
+
 COPY --from=builder /build/target/release/electrs /bin/electrs
 
 # Electrum RPC
