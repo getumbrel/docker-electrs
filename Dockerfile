@@ -1,13 +1,13 @@
 ARG VERSION=v0.8.5
 
-FROM rust:1.44.1-slim-buster AS builder
+FROM debian:buster-slim AS builder
 
 ARG VERSION
 
 WORKDIR /build
 
 RUN apt-get update
-RUN apt-get install -y git clang cmake libsnappy-dev
+RUN apt-get install -y git rustc clang cmake libsnappy-dev
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
 
