@@ -15,6 +15,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+          - linux/arm/v7
         version:
           - master
           - v0.8.5
@@ -38,6 +42,6 @@ jobs:
       - name: Run Docker buildx
         run: |
           docker buildx build \
-          --platform linux/amd64,linux/arm64,linux/arm/v7 \
+          --platform ${{matrix.platform}} \
           --build-arg VERSION=${{matrix.version}} \
           --tag electrs:${{matrix.version}} .
