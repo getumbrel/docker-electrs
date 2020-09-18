@@ -15,7 +15,7 @@ RUN cargo build --release --bin electrs
 
 FROM debian:buster-slim
 
-RUN adduser --uid 1000 --home /data --gecos "" electrs
+RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
 USER electrs
 WORKDIR /data
 
