@@ -20,10 +20,7 @@ jobs:
           - linux/arm64
           - linux/arm/v7
         version:
-          - master
           - v0.8.5
-          - v0.8.4
-          - v0.8.3
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
