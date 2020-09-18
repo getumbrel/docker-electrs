@@ -7,7 +7,7 @@ ARG VERSION
 WORKDIR /build
 
 RUN apt-get update
-RUN apt-get install -y git rustc clang cmake libsnappy-dev
+RUN apt-get install -y git rustc clang cmake
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
 
