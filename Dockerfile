@@ -1,25 +1,36 @@
 ARG VERSION=v0.8.9
 
-FROM debian:buster-slim AS builder
-
-ARG VERSION
+FROM rust:1.44.1-slim-buster as builder
 
 WORKDIR /build
 
-RUN apt-get update
-RUN apt-get install -y git cargo clang cmake libsnappy-dev
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends clang=1:7.* cmake=3.* \
+    libsnappy-dev=1.* \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
 
-RUN cargo build --release --bin electrs
+RUN cargo install --locked --path .
 
+# Create runtime image
 FROM debian:buster-slim
 
-RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
-USER electrs
-WORKDIR /data
+WORKDIR /app
 
-COPY --from=builder /build/target/release/electrs /bin/electrs
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build/target/release .
+
+RUN groupadd -r user \
+    && adduser --disabled-login --system --shell /bin/false --uid 1000 --ingroup user user \
+    && chown -R user:user /app
+
+USER user
 
 # Electrum RPC
 EXPOSE 50001
@@ -29,4 +40,6 @@ EXPOSE 4224
 
 STOPSIGNAL SIGINT
 
-ENTRYPOINT ["electrs"]
+HEALTHCHECK CMD curl -fSs http://localhost:4224/ || exit 1
+
+ENTRYPOINT ["./electrs"]
