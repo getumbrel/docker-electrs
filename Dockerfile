@@ -1,4 +1,4 @@
-ARG VERSION=v0.8.9
+ARG VERSION=v0.8.11
 
 FROM debian:buster-slim AS builder
 
