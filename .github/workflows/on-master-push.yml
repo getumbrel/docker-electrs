@@ -1,9 +1,7 @@
 name: Build on master push
 
 on:
-  push:
-    branches:
-      - master
+  push
 
 env:
   DOCKER_CLI_EXPERIMENTAL: enabled
@@ -18,7 +16,6 @@ jobs:
         platform:
           - linux/amd64
           - linux/arm64
-          - linux/arm/v7
         version:
           - v0.8.11
     steps:
