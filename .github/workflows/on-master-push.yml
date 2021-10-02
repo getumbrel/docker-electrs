@@ -59,7 +59,7 @@ jobs:
           --cache-to "type=local,dest=/tmp/.buildx-cache" \
           --platform ${{matrix.platform}} \
           --build-arg VERSION=${{matrix.version}} \
-          --tag ${{ secrets.DOCKER_USERNAME }}/electrs:${{matrix.version}} \
+          --tag ${{ secrets.DOCKER_HUB_USER }}/electrs:${{matrix.version}} \
           --output "type=registry" .
 
       - name: Run Docker buildx against latest
