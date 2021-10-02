@@ -69,5 +69,5 @@ jobs:
           --cache-to "type=local,dest=/tmp/.buildx-cache" \
           --platform ${{matrix.platform}} \
           --build-arg VERSION=${{matrix.version}} \
-          --tag ${{ secrets.DOCKER_USERNAME }}/electrs:latest \
+          --tag ${{ secrets.DOCKER_HUB_USER }}/electrs:latest \
           --output "type=registry" .
