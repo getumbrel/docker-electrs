@@ -2,7 +2,8 @@ name: Build on master push
 
 on:
   push:
-    branches: master
+    branches:
+      - master
 
 env:
   DOCKER_CLI_EXPERIMENTAL: enabled
@@ -10,64 +11,31 @@ env:
 jobs:
   build:
     name: Build electrs image
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
-        version:
-          - v0.9.0
+    runs-on: ubuntu-18.04
+    env:
+      VERSION: v0.9.0
     steps:
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
       - name: Checkout project
         uses: actions/checkout@v2
 
       - name: Set up QEMU
-        id: qemu
         uses: docker/setup-qemu-action@v1
-        with:
-          image: tonistiigi/binfmt:latest
-          platforms: all
+        id: qemu
 
       - name: Setup Docker buildx action
         uses: docker/setup-buildx-action@v1
         id: buildx
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Show available Docker buildx platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Run Docker buildx against version
+      - name: Run Docker buildx
         run: |
           docker buildx build \
-          --cache-from "type=local,src=/tmp/.buildx-cache" \
-          --cache-to "type=local,dest=/tmp/.buildx-cache" \
-          --platform ${{matrix.platform}} \
-          --build-arg VERSION=${{matrix.version}} \
-          --tag ${{ secrets.DOCKER_HUB_USER }}/electrs:${{matrix.version}} \
-          --output "type=registry" .
-
-      - name: Run Docker buildx against latest
-        run: |
-          docker buildx build \
-          --cache-from "type=local,src=/tmp/.buildx-cache" \
-          --cache-to "type=local,dest=/tmp/.buildx-cache" \
-          --platform ${{matrix.platform}} \
-          --build-arg VERSION=${{matrix.version}} \
-          --tag ${{ secrets.DOCKER_HUB_USER }}/electrs:latest \
+          --platform linux/amd64,linux/arm64 \
+          --build-arg VERSION=$VERSION \
+          --tag ${{ secrets.DOCKER_HUB_USER }}/electrs:$VERSION \
           --output "type=registry" .
