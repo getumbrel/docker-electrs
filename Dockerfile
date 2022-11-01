@@ -1,4 +1,4 @@
-ARG VERSION=v0.9.4
+ARG VERSION=v0.9.9
 
 FROM rust:1.48.0-slim AS builder
 
@@ -10,6 +10,10 @@ RUN apt-get update
 RUN apt-get install -y git clang cmake libsnappy-dev
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
+
+# cargo under QEMU building for ARM can consumes 10s of GBs of RAM...
+# Solution: https://users.rust-lang.org/t/cargo-uses-too-much-memory-being-run-in-qemu/76531/2
+ENV CARGO_NET_GIT_FETCH_WITH_CLI true
 
 RUN cargo install --locked --path .
 
