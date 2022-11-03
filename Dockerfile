@@ -1,4 +1,4 @@
-ARG VERSION=v0.9.9
+ARG VERSION=v0.9.10
 
 FROM rust:1.48.0-slim AS builder
 
