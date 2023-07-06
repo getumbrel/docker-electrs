@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     name: Build electrs image
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     env:
       VERSION: v0.9.10
     steps:
