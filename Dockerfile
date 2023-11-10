@@ -1,6 +1,6 @@
 ARG VERSION=v0.10.1
 
-FROM rust:1.63.0-slim AS builder
+FROM rust:1.63.0-slim-bullseye AS builder
 
 ARG VERSION
 
@@ -17,7 +17,7 @@ ENV CARGO_NET_GIT_FETCH_WITH_CLI true
 
 RUN cargo install --locked --path .
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN adduser --disabled-password --uid 1000 --home /data --gecos "" electrs
 USER electrs
