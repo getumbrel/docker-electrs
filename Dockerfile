@@ -6,12 +6,8 @@ ARG VERSION
 
 WORKDIR /build
 
-# RUN apt-get update
-# RUN apt-get install -y git clang cmake libsnappy-dev
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git clang cmake libsnappy-dev && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN apt-get install -y git clang cmake libsnappy-dev
 
 RUN git clone --branch $VERSION https://github.com/romanz/electrs .
 
