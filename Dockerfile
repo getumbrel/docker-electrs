@@ -1,4 +1,4 @@
-ARG VERSION=v0.10.9
+ARG VERSION=v0.10.10
 
 FROM rust:1.63.0-slim-bullseye AS builder
 
