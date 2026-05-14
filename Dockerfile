@@ -1,4 +1,4 @@
-ARG VERSION=v0.11.0
+ARG VERSION=v0.11.1
 
 FROM rust:1.85-slim-bookworm AS builder
 
